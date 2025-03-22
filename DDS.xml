@@ -1,0 +1,302 @@
+<?xml version="1.0"?>
+<!--
+(c) 2005-2015 Copyright, Real-Time Innovations.  All rights reserved.
+No duplications, whole or partial, manual or electronic, may be made
+without express written permission.  Any such copies, or revisions thereof,
+must display this notice unaltered.
+This code contains trade secrets of Real-Time Innovations, Inc.
+ -->
+
+<dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://community.rti.com/schema/5.1.0/rti_dds_profiles.xsd" version="5.1.0">
+
+    <!-- Qos Library -->
+	<qos_library name="QosLibrary">
+
+	</qos_library>
+
+    <!-- types -->
+    <types>
+
+        <struct name="CameraMessage">
+            <member name="time_stamp" stringMaxLength="128" type="string"/>
+        </struct>
+
+        <struct name="ButtonMessage">
+            <member name="command" stringMaxLength="10" type="string"/>
+        </struct>
+
+        <struct name="TempSensorMessage">
+            <member name="temp_reading" type="int32"/>
+        </struct>
+
+        <struct name="ActuatorMessage">
+            <member name="actuator_status" stringMaxLength="10" type="string"/>
+            <member name="actuator_id" type="int32"/>
+        </struct>
+
+    </types>
+
+
+    <!-- Domain Library -->
+    <domain_library name="MyDomainLibrary">
+        <domain name="MyDomain" domain_id="0">
+            <register_type name="CameraMessage"  type_ref="CameraMessage"/>
+            <register_type name="ButtonMessage"  type_ref="ButtonMessage"/>
+            <register_type name="TempSensorMessage"  type_ref="TempSensorMessage"/>
+            <register_type name="ActuatorMessage"  type_ref="ActuatorMessage"/>
+
+            <topic name="CameraDataTopic" register_type_ref="CameraMessage"/>
+            <topic name="ButtonStatusTopic" register_type_ref="ButtonMessage"/>
+            <topic name="Sensor1DataTopic" register_type_ref="TempSensorMessage"/>
+            <topic name="Sensor1ExtremeDataTopic" register_type_ref="TempSensorMessage"/>
+            <topic name="Sensor2DataTopic" register_type_ref="TempSensorMessage"/>
+            <topic name="Sensor2ExtremeDataTopic" register_type_ref="TempSensorMessage"/>
+            <topic name="Actuator1StatusTopic" register_type_ref="ActuatorMessage"/>
+            <topic name="Actuator2StatusTopic" register_type_ref="ActuatorMessage"/>
+
+        </domain>
+
+    </domain_library>
+
+
+    <!-- Participant library -->
+    <domain_participant_library name="MyParticipantLibrary">
+
+        <domain_participant name="Publishers" domain_ref="MyDomainLibrary::MyDomain">
+
+            <publisher name="Camera_pub">
+                <data_writer name="MyCameraWriter" topic_ref="CameraDataTopic">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>PERSISTENT_DURABILITY_QOS</kind>
+                        </durability>
+                    </datawriter_qos>
+                </data_writer>
+            </publisher>
+
+            <publisher name="Button_pub">
+                <data_writer name="MyButtonWriter" topic_ref="ButtonStatusTopic">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                    </datawriter_qos>
+                </data_writer>
+            </publisher>
+
+            <publisher name="Temp_sensor1_pub">
+                <data_writer name="MySensor1Writer" topic_ref="Sensor1DataTopic">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                    </datawriter_qos>
+                </data_writer>
+                <data_writer name="MySensor1ExtremeWriter" topic_ref="Sensor1ExtremeDataTopic">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>PERSISTENT_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+                        </history>
+                    </datawriter_qos>
+                </data_writer>
+            </publisher>
+
+            <publisher name="Temp_sensor2_pub">
+                <data_writer name="MySensor2Writer" topic_ref="Sensor2DataTopic">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                    </datawriter_qos>
+                </data_writer>
+                <data_writer name="MySensor2ExtremeWriter" topic_ref="Sensor2ExtremeDataTopic">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>PERSISTENT_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+                        </history>
+                    </datawriter_qos>
+                </data_writer>
+            </publisher>
+
+            <publisher name="Actuator1_pub">
+                <data_writer name="MyActuator1Writer" topic_ref="Actuator1StatusTopic">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>PERSISTENT_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+                        </history>
+                    </datawriter_qos>
+                </data_writer>
+            </publisher>
+
+            <publisher name="Actuator2_pub">
+                <data_writer name="MyActuator2Writer" topic_ref="Actuator2StatusTopic">
+                    <datawriter_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>PERSISTENT_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+                        </history>
+                    </datawriter_qos>
+                </data_writer>
+            </publisher>
+        </domain_participant>
+
+
+        <domain_participant name="Subscribers" domain_ref="MyDomainLibrary::MyDomain">
+
+            <subscriber name="Actuator1_sub">
+                <data_reader name="MySensor1Reader" topic_ref="Sensor1DataTopic" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                    </datareader_qos>
+                </data_reader>
+                <data_reader name="MyButtonStatusReader" topic_ref="ButtonStatusTopic" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                    </datareader_qos>
+                </data_reader>
+            </subscriber>
+
+            <subscriber name="Actuator2_sub">
+                <data_reader name="MySensor2Reader" topic_ref="Sensor2DataTopic" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                    </datareader_qos>
+                </data_reader>
+                <data_reader name="MyButtonStatusReader" topic_ref="ButtonStatusTopic" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>TRANSIENT_LOCAL_DURABILITY_QOS</kind>
+                        </durability>
+                    </datareader_qos>
+                </data_reader>
+            </subscriber>
+
+            <subscriber name="Dashboard_sub">
+                <data_reader name="MyCameraReader" topic_ref="CameraDataTopic" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>PERSISTENT_DURABILITY_QOS</kind>
+                        </durability>
+                    </datareader_qos>
+                </data_reader>
+                <data_reader name="MyActuator1StatusReader" topic_ref="Actuator1StatusTopic" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>PERSISTENT_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+                <data_reader name="MyActuator2StatusReader" topic_ref="Actuator2StatusTopic" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>PERSISTENT_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+                <data_reader name="MySensor1ExtremeReader" topic_ref="Sensor1ExtremeDataTopic" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>PERSISTENT_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+                <data_reader name="MySensor2ExtremeReader" topic_ref="Sensor2ExtremeDataTopic" >
+                    <datareader_qos>
+                        <reliability>
+                            <kind>RELIABLE_RELIABILITY_QOS</kind>
+                        </reliability>
+                        <durability>
+                            <kind>PERSISTENT_DURABILITY_QOS</kind>
+                        </durability>
+                        <history>
+                            <kind>KEEP_LAST_HISTORY_QOS</kind>
+                            <depth>10</depth>
+	                    </history>
+                    </datareader_qos>
+                </data_reader>
+            </subscriber>
+        </domain_participant>
+    </domain_participant_library>
+</dds>
