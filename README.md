@@ -3,6 +3,12 @@
 A distributed IoT simulation system based on the DDS (Data Distribution Service) protocol, Pub/Sub architecture.  
 This project includes multiple components (sensors, actuators, dashboard, camera, etc.) that communicate over a DDS data bus, demonstrating real-time message exchange, QoS policies, and system reactivity.
 
+**Course:** Web-Based Information Systems  
+**Department:** Industrial Engineering and Management, Ben-Gurion University of the Negev  
+**Submission Date:** June 30, 2024  
+**Team Members:** Tom Damari, Shira Monk  
+**Instructor:** Mr. Moshe Bardea
+
 ## Components
 - `camera_pub.py` – Sends timestamp messages at 10Hz
 - `button_pub.py` – Sends start/stop commands every 20 seconds
